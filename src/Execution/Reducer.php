@@ -70,6 +70,15 @@ class Reducer
                     // initial values come from advancing the generator via ->current, subsequent values come from ->send()
                     list($queryField, $astField, $childCost) = $results;
 
+                    // TODO variable args won't be set yet, don't let that blow up the query - remove this when
+                    // argument validation happens BEFORE query reduction
+                    try {
+                        /** @var Query|FieldAst $queryField */
+                        $args = $queryField->getKeyValueArguments();
+                    } catch (\Exception $e) {
+                        $args = [];
+                    }
+
                     /**
                      * @var Query|FieldAst $queryField
                      * @var Field          $astField
